@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package bulkbeacon;
+
+// Interface exported by the server.
+service PulsarDataIngestion {
+  rpc Ingest(Beacons) returns (IngestResult) {}
+}
+
+////
+// Specifies the network location from which a measurement was taken. Either
+// IP address OR Geo+ASN information maybe be provided -- but not both.  If both
+// are provided then Geo+ASN takes precedence.
+message Location {
+  // IPv4 or IPv6 host address.
+  string ip_address = 1;
+
+  // ISO 3166-1 (alpha-2) country code. If providing Geo+ASN info this value is
+  // REQUIRED.
+  string geo_country = 2;
+
+  // ISO 3166-2 subdivision code. If providing Geo+ASN info this value is OPTIONAL.
+  string geo_subdiv = 3;
+
+  // Public ASN. If providing Geo+ASN info this value is OPTIONAL.
+  int32 asn = 4;
+}
+
+////
+// Classification of the device type on which a measurement was taken. Default is UNKNOWN.
+enum DeviceType {
+  UNKNOWN = 0;
+  DESKTOP = 1;
+  MOBILE = 2;
+  GENERIC_SET_TOP = 3;
+}
+
+////
+// Unification of attributes that identify the originator (provider) of a measurement and
+// the owner of the data.
+message Attribution {
+  // REQUIRED. Associated measurement will we discarded without this.
+  string jobid = 1;
+
+  // REQUIRED. Associated measurement will we discarded without this.
+  Location location = 2;
+
+  // OPTIONAL.
+  DeviceType device_type = 3;
+}
+
+////
+// Detailed measurement of performance. Time values are absolute durations.
+message DetailedPerformance {
+  int32 dns_lookup_ms = 1;
+  int32 transport_connect_ms = 2;
+  int32 tls_connect_ms = 3;
+  int32 waiting_ms = 4;
+
+  // One of TTFB or TTLB is REQUIRED. Providing both is valid.
+  int32 time_to_first_byte_ms = 5;
+  int32 time_to_last_byte_ms = 6;
+}
+
+////
+// A simple, single latency value. Use this instead of DetailedPerformance if your
+// measurement process captures only end-to-end timings.
+message SimpleLatency {
+  int32 value_ms = 1;
+}
+
+////
+// Data for a single Attribution. That is: some JobID, from some network location, on
+// some type of device.
+message Payload {
+  // Timestamp (in unix epoch nanoseconds) the data in this object was observed.
+  // If not provided the timestamp that a message containing this Payload was
+  // received by NS1 servers will be used.
+  fixed64 timstamp_epoch_ns = 1;
+
+  // Final HTTP status code resulting from fetching this data. If you don't know
+  // this value (or can't observe it) use 200 to indicate success and 650 to indicate failure.
+  int32 status_code = 2;
+
+  // Overrides the attribution set on the Measurement level. This is OPTIONAL.
+  Attribution attribution = 3;
+
+  oneof value {
+    SimpleLatency simple = 4;
+    DetailedPerformance detailed = 5;
+  }
+}
+
+////
+// A container for multiple Payloads and some top-level defaults.
+message Measurement {
+  // Default attribution for payloads that do not provide their own Attribution object.
+  // This is OPTIONAL but not providing it means any Payload not containing an Attribution
+  // will be discarded.
+  Attribution attribution = 1;
+
+  // May contain data from any number of JobIDs but those jobs must all be owned by the
+  // same AppID -- which is implied by the Beacon object that contains this Measurement.
+  repeated Payload payloads = 2;
+}
+
+message Beacon {
+  string appid = 1;
+  bytes signature = 2;
+  repeated Measurement measurements = 3;
+}
+
+message Beacons {
+  repeated Beacon beacons = 1;
+}
+
+message IngestResult {
+  uint32 processed = 1;
+  uint32 failed = 2;
+}
