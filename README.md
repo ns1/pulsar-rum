@@ -14,7 +14,7 @@ supported.
 
 The bulkbeacon proto code can be compiled (from the `pulsar-rum` directory) with:
 
-``sh
+```sh
 $ protoc -I bulkbeacon bulkbeacon/bulkbeacon.proto --go_out=plugins=grpc:bulkbeacon
 ```
 
