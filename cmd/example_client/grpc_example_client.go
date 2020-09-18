@@ -17,11 +17,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/golang/protobuf/jsonpb"
-	pb "github.com/nsone/pulsar-rum/bulkbeacon" // replace with local import path if needed
-	"google.golang.org/grpc"
 	"log"
 	"time"
+
+	"github.com/golang/protobuf/jsonpb"
+	"google.golang.org/grpc"
+
+	pb "pulsar-rum/internal/bulkbeacon"
 )
 
 var beacons = &pb.Beacons{
@@ -49,7 +51,6 @@ var beacons = &pb.Beacons{
 		},
 	},
 }
-
 
 func main() {
 
