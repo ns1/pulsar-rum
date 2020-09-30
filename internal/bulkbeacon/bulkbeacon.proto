@@ -95,8 +95,10 @@ message Payload {
 
   // Time-to-live value in seconds. This determines how long we will use this data for
   // making routing decisions for the associated attribution.
-  // This is OPTIONAL. If not provided the default value from the associated Pulsar
-  // app/job will be used.
+  // This is OPTIONAL, unless the payload corresponds to a Static Beacon:
+  // - If is not a static beacon and is not provided, the default value from the
+  // associated Pulsar app/job will be used.
+  // - If it's a static beacon and is not provided, the beacon will be rejected.
   int32 data_ttl = 7;
 
   oneof value {
