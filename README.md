@@ -12,10 +12,10 @@ Bulk Beacons
 A method to send performance data to Pulsar in bulk.  gRPC and HTTP+JSON is
 supported.  
 
-The bulkbeacon proto code can be compiled (from the `pulsar-rum` directory) with:
+The example can be built executing (from the `pulsar-rum` directory) with:
 
 ```sh
-$ protoc -I bulkbeacon bulkbeacon/bulkbeacon.proto --go_out=plugins=grpc:bulkbeacon
+$ make all
 ```
 
 See https://grpc.io/ for more examples & details regarding dependencies and

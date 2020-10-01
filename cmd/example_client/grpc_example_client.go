@@ -17,11 +17,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/golang/protobuf/jsonpb"
-	pb "github.com/nsone/pulsar-rum/bulkbeacon" // replace with local import path if needed
-	"google.golang.org/grpc"
 	"log"
+	"runtime"
 	"time"
+
+	"github.com/golang/protobuf/jsonpb"
+	"google.golang.org/grpc"
+
+	pb "pulsar-rum/internal/bulkbeacon"
 )
 
 var beacons = &pb.Beacons{
@@ -41,7 +44,10 @@ var beacons = &pb.Beacons{
 					Payloads: []*pb.Payload{
 						{
 							StatusCode: 200,
-							Value:      &pb.Payload_Simple{&pb.SimpleLatency{ValueMs: 50}},
+							DataTtl:    7200,
+							Value: &pb.Payload_Simple{
+								Simple: &pb.SimpleLatency{ValueMs: 50},
+							},
 						},
 					},
 				},
@@ -49,7 +55,6 @@ var beacons = &pb.Beacons{
 		},
 	},
 }
-
 
 func main() {
 
@@ -59,6 +64,8 @@ func main() {
 	marshaler := jsonpb.Marshaler{}
 	m, _ := marshaler.MarshalToString(beacons)
 	fmt.Println(string(m))
+
+	fmt.Printf("Go version: %s\n", runtime.Version())
 
 	// Set up gRPC connection
 	log.Println("dialing")
