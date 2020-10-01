@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"runtime"
 	"time"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -43,7 +44,10 @@ var beacons = &pb.Beacons{
 					Payloads: []*pb.Payload{
 						{
 							StatusCode: 200,
-							Value:      &pb.Payload_Simple{&pb.SimpleLatency{ValueMs: 50}},
+							DataTtl:    7200,
+							Value: &pb.Payload_Simple{
+								Simple: &pb.SimpleLatency{ValueMs: 50},
+							},
 						},
 					},
 				},
@@ -60,6 +64,8 @@ func main() {
 	marshaler := jsonpb.Marshaler{}
 	m, _ := marshaler.MarshalToString(beacons)
 	fmt.Println(string(m))
+
+	fmt.Printf("Go version: %s\n", runtime.Version())
 
 	// Set up gRPC connection
 	log.Println("dialing")
