@@ -1,21 +1,16 @@
-#
-#
-EXE=grpc_example_client
-GO_FILES := cmd/example_client/grpc_example_client.go
-PB_DIR := internal/bulkbeacon
-PROTOC_GO_FILES := $(PB_DIR)/bulkbeacon.pb.go
-PROTOC_FILES := $(PB_DIR)/bulkbeacon.proto
+BUIlD_BASE_DIR := build
+GEN_BASE_DIR := gen
+PROTO_BASE_DIR := proto
 
-all: protoc build
+all: examples
 
-.PHONY: protoc
-protoc: $(PROTOC_GO_FILES)
-$(PROTOC_GO_FILES): $(PROTOC_FILES)
-	protoc -I $(PB_DIR) $(PROTOC_FILES) --go_out=plugins=grpc:internal/bulkbeacon
-
-build: $(PROTOC_GO_FILES) $(GO_FILES)
-	go build -o build/$(EXE) $(GO_FILES)
+.PHONY: examples
+examples:
+	mkdir -p $(GEN_BASE_DIR)/bulkbeacon/v1 $(BUIlD_BASE_DIR)
+	protoc -I=$(PROTO_BASE_DIR) $(PROTO_BASE_DIR)/bulkbeacon/v1/bulkbeacon.proto --go_out=plugins=grpc:$(GEN_BASE_DIR)
+	go build -o $(BUIlD_BASE_DIR)/grpc_example_client cmd/example_client/grpc_example_client.go
 
 .PHONY: clean
 clean:
-	rm -rf $(PROTOC_GO_FILES) build/
+	rm -rf $(GEN_BASE_DIR) $(BUIlD_BASE_DIR)
+
