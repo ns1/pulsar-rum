@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"runtime"
@@ -23,7 +24,7 @@ import (
 
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
-
+	"google.golang.org/grpc/credentials"
 	pb "pulsar-rum/gen/bulkbeacon/v1"
 )
 
@@ -69,7 +70,9 @@ func main() {
 
 	// Set up gRPC connection
 	log.Println("dialing")
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(address,
+		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
+		grpc.WithBlock())
 	log.Println("dialed")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
