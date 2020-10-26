@@ -16,7 +16,7 @@ messages.
 ### Getting started with gRPC
 
 1. Copy the desired version of 
-[bulkbeacon.proto](https://github.com/ns1/pulsar-routemap/proto/bulkbeacon)
+[bulkbeacon.proto](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon)
 into your project.  Use your preferred method of building gRPC clients from that 
 `.proto` file.
 2. Use `g.ns1p.net:443` as the service's target address.
