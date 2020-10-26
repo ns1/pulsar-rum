@@ -30,14 +30,14 @@ import (
 var beacons = &pb.Beacons{
 	Beacons: []*pb.Beacon{
 		{
-			Appid: "kli9vl",
+			Appid: "__APPID__", // FIXME: Your AppID here.
 			Measurements: []*pb.Measurement{
 				{
 					Attribution: &pb.Attribution{
-						Jobid: "15pycpg",
+						Jobid: "__JOBID__", // FIXME: Your JobID here.
 						Location: &pb.Location{
 							GeoCountry: "GB",
-							Asn:        701,
+							Asn:        2856,
 						},
 						DeviceType: pb.DeviceType_DESKTOP,
 					},
@@ -45,8 +45,8 @@ var beacons = &pb.Beacons{
 						{
 							StatusCode: 200,
 							DataTtl:    7200,
-							Value: &pb.Payload_Score{
-								Score: &pb.Score{Value: 12.34},
+							Value: &pb.Payload_Simple{
+								Simple: &pb.SimpleLatency{ValueMs: 50},
 							},
 						},
 					},
