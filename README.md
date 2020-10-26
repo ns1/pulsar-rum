@@ -9,8 +9,9 @@ Utilities for working with Pulsar RUM.
 Bulk Beacons
 ------------
 
-A method to send performance data to Pulsar in bulk.  gRPC and HTTP+JSON is
-supported.  
+A method to send performance data to Pulsar in bulk.  gRPC and HTTP+JSON are
+supported.  See comments in the `bulkbeacon.proto` file for how to structure
+messages.
 
 ### Getting started with gRPC
 
