@@ -24,20 +24,20 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
 
-	pb "pulsar-rum/internal/bulkbeacon"
+	pb "pulsar-rum/gen/bulkbeacon/v1"
 )
 
 var beacons = &pb.Beacons{
 	Beacons: []*pb.Beacon{
 		{
-			Appid: "appid",
+			Appid: "__APPID__", // FIXME: Your AppID here.
 			Measurements: []*pb.Measurement{
 				{
 					Attribution: &pb.Attribution{
-						Jobid: "jobid",
+						Jobid: "__JOBID__", // FIXME: Your JobID here.
 						Location: &pb.Location{
-							IpAddress:  "72.89.27.210",
-							GeoCountry: "FR",
+							GeoCountry: "GB",
+							Asn:        2856,
 						},
 						DeviceType: pb.DeviceType_DESKTOP,
 					},
@@ -58,7 +58,7 @@ var beacons = &pb.Beacons{
 
 func main() {
 
-	address := "b.ns1p.net:2080"
+	address := "g.ns1p.net:443"
 
 	// Debug if needed
 	marshaler := jsonpb.Marshaler{}
