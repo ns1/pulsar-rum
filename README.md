@@ -16,23 +16,23 @@ supported.
 
 1. Copy the desired version of 
 [bulkbeacon.proto](https://github.com/ns1/pulsar-routemap/proto/bulkbeacon)
-into your project.  Use your preferred method of building gRPC clients that 
+into your project.  Use your preferred method of building gRPC clients from that 
 `.proto` file.
 2. Use `g.ns1p.net:443` as the service's target address.
 
 See the [example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client/grpc_example_client.go) 
-for more details.  check out https://grpc.io/ for more examples & details
+for more details.  Additionally, check out https://grpc.io/ for more examples & details
 regarding dependencies and compiling for other languages.
 
 ### Getting started with HTTP+JSON
 
 For HTTP+JSON use the `b.ns1p.net/v1/bulk/beacon` endpoint.
 
-> N.B. You can use the protocol buffer objects as a basis for the required
-> JSON payload.  You'll need to use helper libraries for your language to
-> serialize protocol buffer objects to JSON.  Some information is available on 
-> [the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
-> page.
+N.B. You can use the protocol buffer objects as a basis for the required
+JSON payload.  You'll need to use helper libraries for your language to
+serialize protocol buffer objects to JSON.  Some information is available on 
+[the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
+page.
 
 
 Building the examples
