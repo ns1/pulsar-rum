@@ -27,7 +27,7 @@ regarding dependencies and compiling for other languages.
 
 ### Getting started with HTTP+JSON
 
-For HTTP+JSON use the `b.ns1p.net/v1/bulk/beacon` endpoint.
+For HTTP+JSON use the `http(s)://b.ns1p.net/v1/beacon/bulk` endpoint.
 
 N.B. You can use the protocol buffer objects as a basis for the required
 JSON payload.  You'll need to use helper libraries for your language to
