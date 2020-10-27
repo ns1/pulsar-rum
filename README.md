@@ -20,6 +20,7 @@ messages.
 into your project.  Use your preferred method of building gRPC clients from that 
 `.proto` file.
 2. Use `g.ns1p.net:443` as the service's target address.
+3. Enable TLS on your gRPC transport.
 
 See the [example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client/grpc_example_client.go) 
 for more details.  Additionally, check out https://grpc.io/ for more examples & details
