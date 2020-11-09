@@ -25,6 +25,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+
 	pb "pulsar-rum/gen/bulkbeacon/v1"
 )
 
