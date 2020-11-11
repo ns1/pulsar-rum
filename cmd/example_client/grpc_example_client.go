@@ -64,15 +64,10 @@ type auth struct {
 	key string
 }
 
-// GetRequestMetadata sets the authentication key into the metadata map. The
-// acceptable values for the key are:
-// - X-NSONE-Key
-// - X-NS1-Key
-// - x-nsone-key
-// - x-ns1-key
+// GetRequestMetadata sets the authentication key into the metadata map.
 func (a auth) GetRequestMetadata(ctx context.Context, in ...string) (map[string]string, error) {
 	m := map[string]string{
-		"x-ns1-key": a.key,
+		"X-NSONE-Key": a.key,
 	}
 	return m, nil
 }
