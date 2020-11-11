@@ -25,6 +25,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+
 	pb "pulsar-rum/gen/bulkbeacon/v1"
 )
 
@@ -57,6 +58,25 @@ var beacons = &pb.Beacons{
 	},
 }
 
+// auth it's a simple structure to manage the authentication. It implements
+// grpc.PerRPCCredentials interface.
+type auth struct {
+	key string
+}
+
+// GetRequestMetadata sets the authentication key into the metadata map.
+func (a auth) GetRequestMetadata(ctx context.Context, in ...string) (map[string]string, error) {
+	m := map[string]string{
+		"X-NSONE-Key": a.key,
+	}
+	return m, nil
+}
+
+// RequireTransportSecurity must return true if we are using TLS.
+func (a auth) RequireTransportSecurity() bool {
+	return true
+}
+
 func main() {
 
 	address := "g.ns1p.net:443"
@@ -68,11 +88,15 @@ func main() {
 
 	fmt.Printf("Go version: %s\n", runtime.Version())
 
+	// Setup authentication
+	auth := auth{key: "__YOUR_NS1_API_KEY__"}
+
 	// Set up gRPC connection
 	log.Println("dialing")
 	conn, err := grpc.Dial(address,
 		grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{})),
-		grpc.WithBlock())
+		grpc.WithBlock(),
+		grpc.WithPerRPCCredentials(auth))
 	log.Println("dialed")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
