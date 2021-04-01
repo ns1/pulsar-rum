@@ -18,25 +18,30 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"log"
-	"runtime"
-	"time"
-
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"log"
+	"pulsar-rum/pkg/bulkbeacon"
+	pb "pulsar-rum/pkg/bulkbeacon/v3"
+	"runtime"
+	"time"
+)
 
-	pb "pulsar-rum/gen/bulkbeacon/v1"
+var (
+	appID   = "__appID__"   // FIXME: Your AppID here.
+	jobID   = "__jobID__"   // FIXME: Your JobID here.
+	authKey = "__authKey__" // FIXME: Your NS1 API key here.
 )
 
 var beacons = &pb.Beacons{
 	Beacons: []*pb.Beacon{
 		{
-			Appid: "__APPID__", // FIXME: Your AppID here.
+			Appid: appID, // FIXME: Your AppID here.
 			Measurements: []*pb.Measurement{
 				{
 					Attribution: &pb.Attribution{
-						Jobid: "__JOBID__", // FIXME: Your JobID here.
+						Jobid: jobID, // FIXME: Your JobID here.
 						Location: &pb.Location{
 							GeoCountry: "GB",
 							Asn:        2856,
@@ -47,8 +52,20 @@ var beacons = &pb.Beacons{
 						{
 							StatusCode: 200,
 							DataTtl:    7200,
-							Value: &pb.Payload_Simple{
-								Simple: &pb.SimpleLatency{ValueMs: 50},
+							Data: []*pb.Data{
+								{
+									Value: &pb.Data_SimpleLatency{
+										SimpleLatency: &pb.SimpleLatency{ValueMs: 50},
+									},
+								},
+								{
+									Value: &pb.Data_Availability{
+										Availability: &pb.Availability{
+											Up:         true,
+											StatusCode: 200,
+										},
+									},
+								},
 							},
 						},
 					},
@@ -58,27 +75,8 @@ var beacons = &pb.Beacons{
 	},
 }
 
-// auth it's a simple structure to manage the authentication. It implements
-// grpc.PerRPCCredentials interface.
-type auth struct {
-	key string
-}
-
-// GetRequestMetadata sets the authentication key into the metadata map.
-func (a auth) GetRequestMetadata(ctx context.Context, in ...string) (map[string]string, error) {
-	m := map[string]string{
-		"X-NSONE-Key": a.key,
-	}
-	return m, nil
-}
-
-// RequireTransportSecurity must return true if we are using TLS.
-func (a auth) RequireTransportSecurity() bool {
-	return true
-}
 
 func main() {
-
 	address := "g.ns1p.net:443"
 
 	// Debug if needed
@@ -89,7 +87,7 @@ func main() {
 	fmt.Printf("Go version: %s\n", runtime.Version())
 
 	// Setup authentication
-	auth := auth{key: "__YOUR_NS1_API_KEY__"}
+	auth := bulkbeacon.NewAuth(authKey)
 
 	// Set up gRPC connection
 	log.Println("dialing")

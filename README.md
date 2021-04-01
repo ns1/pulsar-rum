@@ -22,7 +22,7 @@ into your project.  Use your preferred method of building gRPC clients from that
 2. Use `g.ns1p.net:443` as the service's target address.
 3. Enable TLS on your gRPC transport.
 
-See the [example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client/grpc_example_client.go) 
+See the [example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v1/main.go) 
 for more details.  Additionally, check out https://grpc.io/ for more examples & details
 regarding dependencies and compiling for other languages.
 
@@ -40,12 +40,34 @@ page.
 Building the examples
 ---------------------
 
-The examples can be built executing (from the `pulsar-rum` directory) with:
+The first release of the Bulk Beacon gRPC service will only compile with older versions of
+`protoc` and/or `protoc-gen-go` programs. We recommend to use `bulkbeacon_v2.proto` instead.
+It's completely compatible with `bulkbeacon.proto`, with a few additions for newer versions
+of the `protobuf` and `gRPC` tools.
 
+The examples can be built executing several commands from the `pulsar-rum` directory.
+
+If you have an old version of the `protoc-gen-go` tool, you can use:
 ```sh
 $ make examples
 ```
 
+If you want to use the updated version, you can use:
+```shell
+$ make bulkbeacon_v2
+```
+
+If you want to use the v3 version of the service, you can use:
+````shell
+$ make bulkbeacon_v3
+````
+
+Please be aware that v3:
+* Is not compatible with v2.
+* Only supports gRPC ingestion.
+
+If unsure, use v2 or reach out
+with any question you could have.
 
 Contributing
 ------------
