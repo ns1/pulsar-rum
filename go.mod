@@ -1,4 +1,4 @@
-module pulsar-rum
+module github.com/ns1/pulsar-rum
 
 go 1.13
 
