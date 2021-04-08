@@ -1,4 +1,4 @@
-// Copyright 2020 NSONE, Inc.
+// Copyright 2021 NSONE, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,170 +14,115 @@
 
 syntax = "proto3";
 
-package bulkbeacon.v2;
-// Protocol Buffer and gRPC definitions for payloads version 6.
+package bulkbeacon;
 
 option go_package = "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v3";
 
-// Interface exported by the server.
-service PulsarDataIngestion {
-    rpc Ingest(Beacons) returns (IngestResult) {}
+////
+// The network location from which a measurement was taken. Pulsar stores data at Geo+ASN
+// granularity. If an IP address is specified we will use it to determine Geo+ASN. The full
+// IP address is not stored by our systems.
+message IPAddress {
+    // IPv4 or IPv6 host address.
+    string address = 1;
 }
 
-// NOTE --> I moved this message from the bottom to here.
-// IngestResult message. We're leaving separated results thinking in the possiblity
-// that the information could vary depending on the endpoint version.
+////
+// The Geo+ASN location from which a measurement was taken.
+message GeoAsn {
+    // ISO 3166-1 (alpha-2) country code. This value is REQUIRED.
+    string geo_country = 1;
+
+    // ISO 3166-2 subdivision code. This value is OPTIONAL.
+    string geo_subdiv = 2;
+
+    // ASN (network number). This value is OPTIONAL.
+    int32 asn = 3;
+}
+
+////
+// Unification of attributes that identify the source of a measurement and the NS1 customer
+// owning the data.
+message Attribution {
+    // REQUIRED. Associated measurement will we discarded without this.
+    string appid = 1;
+
+    // REQUIRED. Associated measurement will we discarded without this.
+    string jobid = 2;
+
+    // REQUIRED. Where the measurement was taken, or the location it should be associated with.
+    oneof location {
+        IPAddress ip = 3;
+        GeoAsn geo_asn = 4;
+    }
+}
+
+////
+// Metadata concerning "static" metrics.
+message StaticMetricMetadata {
+    // Time-to-live value in seconds. This determines how long we will retain this data and thus
+    // use it for making routing decisions.
+    // This value is OPTIONAL but since all data points require a TTL if this value is not present
+    // we will use the TTL value from associated Pulsar app/job.
+    int32 ttl = 1;
+}
+
+////
+// A simple, single latency value. Use this if your measurement process captures only end-to-end
+// timings of TTLB (time to last byte).
+message LatencyMetric {
+    int32 value = 1;
+}
+
+////
+// A single value of uninterpreted dimension.
+message PerformanceScoreMetric {
+    double value = 1;
+    StaticMetricMetadata meta = 2;
+}
+
+message AvailabilityMetric {
+    // Final HTTP status code resulting from fetching this data. If you don't know
+    // this value (or can't observe it) use 200 to indicate success and 650 to indicate failure.
+    int32 status_code = 1;
+}
+
+message AvailabilityScoreMetric {
+    // An availability "score" between 0 and 1.0 where 0 means totally unavailable and 1.0 mean
+    // totally available.
+    double value = 1;
+    StaticMetricMetadata meta = 2;
+}
+
+message Payload {
+    oneof metric {
+        LatencyMetric latency = 1;
+        PerformanceScoreMetric perf_score = 2;
+        AvailabilityMetric avail = 3;
+        AvailabilityScoreMetric avail_score = 4;
+    }
+}
+
+message Metrics {
+    // the Ability to send static beacons is set on the app/job level
+    // Maybe TTL goes here?
+    Attribution attribution = 1;
+    repeated Payload payloads = 3;
+}
+
+message Beacons {
+    Attribution default_attribution = 1;
+    StaticMetricMetadata default_static_metadata = 2;
+    repeated Metrics metrics = 3;
+}
+
 message IngestResult {
     uint32 processed = 1;
     uint32 failed = 2;
 }
 
-////
-// Specifies the network location from which a measurement was taken. Either
-// IP address OR Geo+ASN information maybe be provided -- but not both.  If both
-// are provided then Geo+ASN takes precedence.
-message Location {
-    // IPv4 or IPv6 host address.
-    string ip_address = 1;
-
-    // ISO 3166-1 (alpha-2) country code. If providing Geo+ASN info this value is
-    // REQUIRED.
-    string geo_country = 2;
-
-    // ISO 3166-2 subdivision code. If providing Geo+ASN info this value is OPTIONAL.
-    string geo_subdiv = 3;
-
-    // Public ASN. If providing Geo+ASN info this value is OPTIONAL.
-    int32 asn = 4;
-}
-
-////
-// Classification of the device type on which a measurement was taken. Default is UNKNOWN.
-enum DeviceType {
-    UNKNOWN = 0;
-    DESKTOP = 1;
-    MOBILE = 2;
-    GENERIC_SET_TOP = 3;
-}
-
-////
-// Unification of attributes that identify the originator (provider) of a measurement and
-// the owner of the data.
-message Attribution {
-    // REQUIRED. Associated measurement will we discarded without this.
-    string jobid = 1;
-
-    // REQUIRED. Associated measurement will we discarded without this.
-    Location location = 2;
-
-    // OPTIONAL.
-    DeviceType device_type = 3;
-}
-
-
-////
-// Detailed measurement of performance. Time values are absolute durations.
-message DetailedPerformance {
-    int32 dns_lookup_ms = 1;
-    int32 transport_connect_ms = 2;
-    int32 tls_connect_ms = 3;
-    int32 waiting_ms = 4;
-
-    // One of TTFB or TTLB is REQUIRED. Providing both is valid.
-    int32 time_to_first_byte_ms = 5;
-    int32 time_to_last_byte_ms = 6;
-}
-
-////
-// A simple, single latency value. Use this instead of DetailedPerformance if your
-// measurement process captures only end-to-end timings.
-message SimpleLatency {
-    int32 value_ms = 1;
-}
-
-////
-// A single value of uninterpreted dimension. Use this if your measurement process
-// does not capture values that fit in either DetailedPerformance or SimpleLatency
-// categories.
-message Score {
-    double value = 1;
-}
-
-///
-// Availability value. If up is false, we can use the status_code defined at the
-// Payload message to get a cause.
-message Availability {
-    bool up = 1;
-    // The HTTP status code. This is optional, if not present, the HTTP status code
-    // at the payload level will be used. The intention is this to be useful
-    // to have more info when a CDN is found not available.
-    int32 status_code = 2;
-}
-
-////
-// Data Object. This is one of several possible messages, including a new one
-// for Availability exclusively. The type of data will be inferred from the
-// object contained.
-message Data {
-    oneof value {
-        SimpleLatency simple_latency = 1;
-        DetailedPerformance detailed_performance = 2;
-        Score score = 3;
-        Availability availability = 4;
+// Interface exported by the server.
+service PulsarDataIngestion {
+    rpc Ingest (Beacons) returns (IngestResult) {
     }
-}
-
-////
-// Data for a single Attribution. That is: some JobID, from some network location, on
-// some type of device.
-message Payload {
-    // Payload Version.
-    // Current supported versions is 6. It will only be checked for implementations
-    // of PV 6 and up.
-    int32 version = 1;
-
-    // Timestamp (in unix epoch nanoseconds) the data in this object was observed.
-    // If not provided the timestamp that a message containing this Payload was
-    // received by NS1 servers will be used.
-    fixed64 timstamp_epoch_ns = 2;
-
-    // Final HTTP status code resulting from fetching this data. If you don't know
-    // this value (or can't observe it) use 200 to indicate success and 650 to indicate failure.
-    int32 status_code = 3;
-
-    // Overrides the attribution set on the Measurement level. This is OPTIONAL.
-    Attribution attribution = 4;
-
-    // Time-to-live value in seconds. This determines how long we will use this data for
-    // making routing decisions for the associated attribution.
-    // This is OPTIONAL, unless the payload corresponds to a Static Beacon:
-    // - If is not a static beacon and is not provided, the default value from the
-    // associated Pulsar app/job will be used.
-    // - If it's a static beacon and is not provided, the beacon will be rejected.
-    int32 data_ttl = 5;
-
-    repeated Data data = 6;
-}
-
-////
-// A container for multiple Payloads and some top-level defaults.
-message Measurement {
-    // Default attribution for payloads that do not provide their own Attribution object.
-    // This is OPTIONAL but not providing it means any Payload not containing an Attribution
-    // will be discarded.
-    Attribution attribution = 1;
-
-    // May contain data from any number of JobIDs but those jobs must all be owned by the
-    // same AppID -- which is implied by the Beacon object that contains this Measurement.
-    repeated Payload payloads = 2;
-}
-
-message Beacon {
-    string appid = 1;
-    bytes signature = 2;
-    repeated Measurement measurements = 3;
-}
-
-message Beacons {
-    repeated Beacon beacons = 1;
 }
