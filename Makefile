@@ -16,7 +16,7 @@ BUIlD_BASE_DIR := build
 GEN_BASE_DIR := gen
 PROTO_BASE_DIR := proto
 
-all: bulkbeacon_v2 bulkbeacon_v3
+all: bulkbeacon_v1 bulkbeacon_v2 bulkbeacon_v3
 
 .PHONY: bulkbeacon_v1
 bulkbeacon_v1:
