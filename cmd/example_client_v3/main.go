@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/ns1/pulsar-rum/pkg/bulkbeacon"
-	pb "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v1"
+	pb "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v2"
 )
 
 var (
