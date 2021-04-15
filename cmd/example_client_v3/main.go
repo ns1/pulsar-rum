@@ -22,10 +22,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
-	"pulsar-rum/pkg/bulkbeacon"
-	pb "pulsar-rum/pkg/bulkbeacon/v3"
 	"runtime"
 	"time"
+
+	"github.com/ns1/pulsar-rum/pkg/bulkbeacon"
+	pb "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v1"
 )
 
 var (
@@ -35,37 +36,49 @@ var (
 )
 
 var beacons = &pb.Beacons{
-	Beacons: []*pb.Beacon{
+	Metrics: []*pb.Metrics{
 		{
-			Appid: appID, // FIXME: Your AppID here.
-			Measurements: []*pb.Measurement{
-				{
-					Attribution: &pb.Attribution{
-						Jobid: jobID, // FIXME: Your JobID here.
-						Location: &pb.Location{
-							GeoCountry: "GB",
-							Asn:        2856,
-						},
-						DeviceType: pb.DeviceType_DESKTOP,
+			Attribution: &pb.Attribution{
+				Jobid: jobID,
+				Appid: appID,
+				Location: &pb.Attribution_GeoAsn{
+					GeoAsn: &pb.GeoAsn{
+						GeoCountry: "GB",
+						Asn:        2856,
 					},
-					Payloads: []*pb.Payload{
-						{
+				},
+			},
+			Payloads: []*pb.Payload{
+				{
+					Metric: &pb.Payload_Latency{
+						Latency: &pb.LatencyMetric{
+							Value: 50,
+						},
+					},
+				},
+				{
+					Metric: &pb.Payload_PerfScore{
+						PerfScore: &pb.PerformanceScoreMetric{
+							Value: 55,
+							Meta: &pb.StaticMetricMetadata{
+								Ttl: 3200,
+							},
+						},
+					},
+				},
+				{
+					Metric: &pb.Payload_Avail{
+						Avail: &pb.AvailabilityMetric{
 							StatusCode: 200,
-							DataTtl:    7200,
-							Data: []*pb.Data{
-								{
-									Value: &pb.Data_SimpleLatency{
-										SimpleLatency: &pb.SimpleLatency{ValueMs: 50},
-									},
-								},
-								{
-									Value: &pb.Data_Availability{
-										Availability: &pb.Availability{
-											Up:         true,
-											StatusCode: 200,
-										},
-									},
-								},
+						},
+					},
+				},
+				{
+					Metric: &pb.Payload_AvailScore{
+						AvailScore: &pb.AvailabilityScoreMetric{
+							Value: 1.0,
+							Meta: &pb.StaticMetricMetadata{
+								Ttl: 7200,
 							},
 						},
 					},
@@ -74,7 +87,6 @@ var beacons = &pb.Beacons{
 		},
 	},
 }
-
 
 func main() {
 	address := "g.ns1p.net:443"
@@ -107,7 +119,8 @@ func main() {
 	defer cancel()
 
 	// Send beacons
-	r, err := c.Ingest(ctx, beacons) // beacons defined / generated above
+	var r *pb.IngestResult
+	r, err = c.Ingest(ctx, beacons) // beacons defined / generated above
 	if err != nil {
 		log.Printf("Error sending beacons: %v", err)
 	} else {

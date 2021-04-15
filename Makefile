@@ -16,19 +16,19 @@ BUIlD_BASE_DIR := build
 GEN_BASE_DIR := gen
 PROTO_BASE_DIR := proto
 
-all: bulkbeacon_v1 bulkbeacon_v2 bulkbeacon_v3
-
-.PHONY: bulkbeacon_v1
-bulkbeacon_v1:
-	mkdir -p $(GEN_BASE_DIR)/bulkbeacon/v1 $(BUIlD_BASE_DIR)
-	protoc -I=$(PROTO_BASE_DIR) $(PROTO_BASE_DIR)/bulkbeacon/v1/bulkbeacon.proto --go_out=plugins=grpc:$(GEN_BASE_DIR)
-	go build -o $(BUIlD_BASE_DIR)/grpc_example_client cmd/example_client/grpc_example_client.go
-
 PB_DIR := proto/bulkbeacon
 PB_OUT := pkg/bulkbeacon
 GRPC_OUT := pkg/bulkbeacon
 PKG_PREFIX := github.com/ns1/pulsar-rum
 BUILD := ./build.sh
+
+all: bulkbeacon_v2
+
+.PHONY: bulkbeacon_v1
+bulkbeacon_v1: pkg/bulkbeacon/*.pb.go
+	mkdir -p $(GEN_BASE_DIR)/bulkbeacon/v1 $(BUIlD_BASE_DIR)
+	protoc -I=$(PROTO_BASE_DIR) $(PROTO_BASE_DIR)/bulkbeacon/v1/bulkbeacon.proto --go_out=plugins=grpc:$(GEN_BASE_DIR)
+	go build -o $(BUIlD_BASE_DIR)/grpc_example_client cmd/example_client/grpc_example_client.go
 
 .PHONY: bulkbeacon_v2
 bulkbeacon_v2: $(PB_OUT)/v2/*.go

@@ -16,7 +16,7 @@
 # Utility for generating protobuf and gRPC artifacts for the Bulk Beacon service
 # from versions 2 and up.
 
-valid_versions="v2 v3"
+valid_versions="v1 v2"
 PB_DIR="proto/bulkbeacon"
 PB_OUT="pkg/bulkbeacon"
 PKG_PREFIX="github.com/ns1/pulsar-rum"
@@ -26,7 +26,7 @@ function validate_version() {
     do
       if [[ $i == $1 ]]
       then
-        echo "Building bulkbeacon_${i}"
+        echo "Bulk Beacon: ${i} is a valid version."
         return
       fi
     done
@@ -36,6 +36,7 @@ function validate_version() {
 
 function build() {
   v="${1}"
+  echo "Bulk Beacon: Building ${v}"
   mkdir -p "${PB_OUT}/${v}"
 	protoc --proto_path="${PB_DIR}/${v}" --go_out=. --go-grpc_out=. \
 	--go_opt="module=${PKG_PREFIX}" --go-grpc_opt="module=${PKG_PREFIX}" \
@@ -48,7 +49,7 @@ function usage() {
   echo "service from versions 2 and up."
   echo "(c) NS1 Inc."
   echo "Usage:"
-  echo "$0 <v2|v3>"
+  echo "$0 <v1|v2>"
 }
 
 if [[ $# != 1 ]]

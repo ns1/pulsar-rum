@@ -31,7 +31,7 @@ func NewPulsarDataIngestionClient(cc grpc.ClientConnInterface) PulsarDataIngesti
 
 func (c *pulsarDataIngestionClient) Ingest(ctx context.Context, in *Beacons, opts ...grpc.CallOption) (*IngestResult, error) {
 	out := new(IngestResult)
-	err := c.cc.Invoke(ctx, "/bulkbeacon.PulsarDataIngestion/Ingest", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/bulkbeacon_v2.PulsarDataIngestion/Ingest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func _PulsarDataIngestion_Ingest_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/bulkbeacon.PulsarDataIngestion/Ingest",
+		FullMethod: "/bulkbeacon_v2.PulsarDataIngestion/Ingest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PulsarDataIngestionServer).Ingest(ctx, req.(*Beacons))
@@ -88,7 +88,7 @@ func _PulsarDataIngestion_Ingest_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PulsarDataIngestion_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "bulkbeacon.PulsarDataIngestion",
+	ServiceName: "bulkbeacon_v2.PulsarDataIngestion",
 	HandlerType: (*PulsarDataIngestionServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
