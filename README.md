@@ -12,13 +12,14 @@ Bulk Beacons
 A method to send performance data to Pulsar in bulk.  gRPC and HTTP+JSON are
 supported.
 
-See comments in the `bulkbeacon_v1.proto` and `bulkbeacon_v2.proto` definition files
-for how to structure messages.
+See comments in the `bulkbeacon.proto` definition file for how to structure messages.
+Depending on the version of the Bulk Beacon ingestion, you will have to look at its respective
+directory (mentioned below in the `Getting started with gRPC` section).
 
 ### Versions
 
 We currently support 2 protocol buffers + gRPC versions for Bulk Beacons. Each one can be
-found on `proto/bulkbeacon/{version}/bulkbeacon_{version}.proto`, with version taking values
+found on `proto/bulkbeacon/{version}/bulkbeacon.proto`, with `version` taking values
 of `v1` and `v2`. 
 
 Version 1 was the first formal release of the Bulk Beacon ingestion, and version 2 
