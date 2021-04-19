@@ -35,15 +35,8 @@ function validate_version() {
 function build() {
   v="${1}"
   proto_file="${PB_DIR}/${v}/bulkbeacon.proto"
-  sha_file="${PB_DIR}/${v}/bulkbeacon_${v}.sha"
   proto_pkg="${PB_OUT}/${v}"
   opt_m="M${proto_file}=${PKG_PREFIX}/${PB_OUT}/${v}"
-  shasum -a 256 -c "${sha_file}"
-  if [[ $? != 0 ]]
-  then
-    echo "Bulk Beacon: sha256 check error"
-    exit 1
-  fi
   echo "Bulk Beacon: Building ${proto_file}"
   mkdir -p "${proto_pkg}"
   protoc --go_out=. --go_opt="${opt_m}" --go_opt="module=${PKG_PREFIX}" \
