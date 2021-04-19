@@ -31,8 +31,7 @@ your Customer Success Representative.
 1. Copy the desired version of `bulkbeacon.proto` from either 
 [https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1)
    or [https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v2](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1) 
-into your project.  Use your preferred method of building gRPC clients from that 
-`.proto` file.
+into your project. Use your preferred method of building gRPC clients from that `.proto` file.
 2. Use `g.ns1p.net:443` as the service's target address.
 3. Enable TLS on your gRPC transport.
 4. Add your NS1 API key. Please check the examples to see how to add the authentication key.
@@ -51,9 +50,6 @@ JSON payload.  You'll need to use helper libraries for your language to
 serialize protocol buffer objects to JSON.  Some information is available on 
 [the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
 page.
-
-At the moment, only Bulk Beacon v1 supports HTTP+JSON ingestion.
-
 
 Building the examples
 ---------------------
@@ -76,8 +72,7 @@ $ make bulkbeacon_v2
 
 You can find the binaries on the `build/` directory. 
 
-Please be aware that v2 only supports gRPC ingestion. If unsure, reach out with any 
-question you could have.
+If unsure, reach out with any question you could have.
 
 Contributing
 ------------
