@@ -3,27 +3,42 @@ Pulsar Real User Monitoring (RUM)
 
 > This project is in [active development](https://github.com/ns1/community/blob/master/project_status/ACTIVE_DEVELOPMENT.md).
 
-Utilities for working with Pulsar RUM.
+Utilities and sample programs for Pulsar RUM.
 
 
 Bulk Beacons
 ------------
 
 A method to send performance data to Pulsar in bulk.  gRPC and HTTP+JSON are
-supported.  See comments in the `bulkbeacon.proto` file for how to structure
-messages.
+supported.
+
+See comments in the `bulkbeacon_v1.proto` and `bulkbeacon_v2.proto` definition files
+for how to structure messages.
+
+### Versions
+
+We currently support 2 protocol buffers + gRPC versions for Bulk Beacons. Each one can be
+found on `proto/bulkbeacon/{version}/bulkbeacon_{version}.proto`, with version taking values
+of `v1` and `v2`. 
+
+Version 1 was the first formal release of the Bulk Beacon ingestion, and version 2 
+supports a new feature for multiple metrics. For more information, please contact
+your Customer Success Representative.
 
 ### Getting started with gRPC
 
-1. Copy the desired version of 
-[bulkbeacon.proto](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon)
+1. Copy the desired version of `bulkbeacon.proto` from either 
+[https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1)
+   or [https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v2](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1) 
 into your project.  Use your preferred method of building gRPC clients from that 
 `.proto` file.
 2. Use `g.ns1p.net:443` as the service's target address.
 3. Enable TLS on your gRPC transport.
+4. Add your NS1 API key. Please check the examples to see how to add the authentication key.
 
-See the [example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v1/main.go) 
-for more details.  Additionally, check out https://grpc.io/ for more examples & details
+See the [v1 example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v1/main.go) 
+or the [v2 example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v2/main.go) 
+for more details. Additionally, check out https://grpc.io/ for more information 
 regarding dependencies and compiling for other languages.
 
 ### Getting started with HTTP+JSON
@@ -36,38 +51,32 @@ serialize protocol buffer objects to JSON.  Some information is available on
 [the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
 page.
 
+At the moment, only Bulk Beacon v1 supports HTTP+JSON ingestion.
+
 
 Building the examples
 ---------------------
 
-The first release of the Bulk Beacon gRPC service will only compile with older versions of
-`protoc` and/or `protoc-gen-go` programs. We recommend to use `bulkbeacon_v2.proto` instead.
-It's completely compatible with `bulkbeacon.proto`, with a few additions for newer versions
-of the `protobuf` and `gRPC` tools.
-
 The examples can be built executing several commands from the `pulsar-rum` directory.
 
-If you have an old version of the `protoc-gen-go` tool, you can use:
+To build both examples, execute:
 ```sh
-$ make examples
+$ make
 ```
 
-If you want to use the updated version, you can use:
+If you want to build a specific version, execute:
+```shell
+$ make bulkbeacon_v1
+```
+or
 ```shell
 $ make bulkbeacon_v2
 ```
 
-If you want to use the v3 version of the service, you can use:
-````shell
-$ make bulkbeacon_v3
-````
+You can find the binaries on the `build/` directory. 
 
-Please be aware that v3:
-* Is not compatible with v2.
-* Only supports gRPC ingestion.
-
-If unsure, use v2 or reach out
-with any question you could have.
+Please be aware that v2 only supports gRPC ingestion. If unsure, reach out with any 
+question you could have.
 
 Contributing
 ------------

@@ -14,9 +14,7 @@
 
 syntax = "proto3";
 
-package bulkbeacon_v1;
-
-option go_package = "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v1";
+package bulkbeacon;
 
 // Interface exported by the server.
 service PulsarDataIngestion {
