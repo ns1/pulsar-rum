@@ -1,4 +1,4 @@
-# Copyright 2020 NSONE, Inc.
+# Copyright 2021 NSONE, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,10 +42,4 @@ $(V2_GO_FILES): $(PB_DIR)/v2/bulkbeacon.proto
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_BASE_DIR) $(PB_OUT)/v2 $(PB_OUT)/v1
-
-.PHONY: hash
-hash:
-	shasum $(PB_DIR)/v1/bulkbeacon.proto > $(PB_DIR)/v1/bulkbeacon_v1.sha
-	shasum $(PB_DIR)/v2/bulkbeacon.proto > $(PB_DIR)/v2/bulkbeacon_v2.sha
-
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2020 NSONE, Inc.
+# Copyright 2021 NSONE, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Utility for generating protobuf and gRPC artifacts for the Bulk Beacon service
-# from versions 2 and up.
+# Utility for generating protobuf and gRPC artifacts for the Bulk Beacon service.
 
 valid_versions="v1 v2"
 PB_DIR="proto/bulkbeacon"
@@ -45,8 +44,7 @@ function build() {
 
 function usage() {
   echo -n "Utility for generating protobuf and gRPC artifacts for the Pulsar Bulk "
-  echo "Beacon "
-  echo "service from versions 2 and up."
+  echo "Beacon Service."
   echo "(c) NS1 Inc."
   echo "Usage:"
   echo "$0 <v1|v2>"

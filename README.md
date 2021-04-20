@@ -18,8 +18,8 @@ directory (mentioned below in the `Getting started with gRPC` section).
 
 ### Versions
 
-We currently support 2 protocol buffers + gRPC versions for Bulk Beacons. Each one can be
-found on `proto/bulkbeacon/{version}/bulkbeacon.proto`, with `version` taking values
+We currently support two formats for gRPC and HTTP+JSON for Bulk Beacons. Each one can be
+found in `proto/bulkbeacon/{version}/bulkbeacon.proto`, with `version` taking values
 of `v1` and `v2`. 
 
 Version 1 was the first formal release of the Bulk Beacon ingestion, and version 2 
@@ -84,7 +84,7 @@ for more information.
 License
 -------
 
-Copyright (C) 2020, NSONE, Inc.
+Copyright (C) 2021, NSONE, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
