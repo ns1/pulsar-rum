@@ -26,8 +26,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/ns1/pulsar-rum/pkg/bulkbeacon"
-	pb "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v1"
+	"pulsar-rum/pkg/bulkbeacon"
+	pb "pulsar-rum/pkg/bulkbeacon/v1"
 )
 
 var (

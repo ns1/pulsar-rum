@@ -25,8 +25,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/ns1/pulsar-rum/pkg/bulkbeacon"
-	pb "github.com/ns1/pulsar-rum/pkg/bulkbeacon/v2"
+	"pulsar-rum/pkg/bulkbeacon"
+	pb "pulsar-rum/pkg/bulkbeacon/v2"
 )
 
 var (
