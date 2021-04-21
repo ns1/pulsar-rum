@@ -42,8 +42,10 @@ var beacons = &pb.Beacons{
 				Jobid: jobID,
 				Appid: appID,
 				Location: &pb.Attribution_GeoAsn{
+					// GEO+ASN
 					GeoAsn: &pb.GeoAsn{
-						GeoCountry: "GB",
+						GeoCountry: "US",
+						GeoSubdiv:  "NY",
 						Asn:        2856,
 					},
 				},
@@ -80,6 +82,50 @@ var beacons = &pb.Beacons{
 							Meta: &pb.StaticMetricMetadata{
 								Ttl: 7200,
 							},
+						},
+					},
+				},
+			},
+		},
+		{
+			Attribution: &pb.Attribution{
+				Appid: appID,
+				Jobid: jobID,
+				Location: &pb.Attribution_Ip{
+					// IP Address instead of GEO+ASN.
+					Ip: &pb.IPAddress{
+						Address: "1.2.3.4",
+					},
+				},
+			},
+			Payloads: []*pb.Payload{
+				{
+					Metric: &pb.Payload_PerfScore{
+						// Static value without metadata.
+						PerfScore: &pb.PerformanceScoreMetric{
+							Value: 70,
+						},
+					},
+				},
+			},
+		},
+		{
+			Attribution: &pb.Attribution{
+				Appid: appID,
+				Jobid: jobID,
+				Location: &pb.Attribution_GeoAsn{
+					GeoAsn: &pb.GeoAsn{
+						// No subdiv or ASN
+						GeoCountry: "US",
+					},
+				},
+			},
+			Payloads: []*pb.Payload{
+				{
+					Metric: &pb.Payload_Avail{
+						Avail: &pb.AvailabilityMetric{
+							// unavailable
+							StatusCode: 650,
 						},
 					},
 				},
