@@ -107,6 +107,13 @@ var beacons = &pb.Beacons{
 						},
 					},
 				},
+				{
+					Metric: &pb.Payload_Avail{
+						Avail: &pb.AvailabilityMetric{
+							StatusCode: 200,
+						},
+					},
+				},
 			},
 		},
 		{
@@ -122,10 +129,18 @@ var beacons = &pb.Beacons{
 			},
 			Payloads: []*pb.Payload{
 				{
-					Metric: &pb.Payload_Avail{
-						Avail: &pb.AvailabilityMetric{
-							// unavailable
-							StatusCode: 650,
+					Metric: &pb.Payload_Latency{
+						Latency: &pb.LatencyMetric{
+							Value: 65,
+						},
+					},
+				},
+				{
+					// Static value for avail.
+					Metric: &pb.Payload_AvailScore{
+						AvailScore: &pb.AvailabilityScoreMetric{
+							Value: 0.98,
+							// no static meta, TTL used comes from the job config.
 						},
 					},
 				},
