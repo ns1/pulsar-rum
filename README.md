@@ -32,9 +32,12 @@ your Customer Success Representative.
 [https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1)
    or [https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v2](https://github.com/ns1/pulsar-rum/tree/master/proto/bulkbeacon/v1) 
 into your project. Use your preferred method of building gRPC clients from that `.proto` file.
-2. Use `g.ns1p.net:443` as the service's target address.
+2. Use `g.ns1p.net:443` as the service's target address. This works for both 
+ versions of the service.
 3. Enable TLS on your gRPC transport.
-4. Add your NS1 API key. Please check the examples to see how to add the authentication key.
+4. Add your NS1 API key. You can get or create one via NS1's portal here
+ https://my.nsone.net/#/account/settings.
+Please check the examples to see how to add the authentication key.
 
 See the [v1 example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v1/main.go) 
 or the [v2 example Golang client](https://github.com/ns1/pulsar-rum/blob/master/cmd/example_client_v2/main.go) 
@@ -43,13 +46,71 @@ regarding dependencies and compiling for other languages.
 
 ### Getting started with HTTP+JSON
 
-For HTTP+JSON use the `http(s)://b.ns1p.net/v1/beacon/bulk` endpoint.
+For HTTP+JSON you'll be POST'ing data to an HTTP endpoint based on the version of the
+ service:
+ 
+* For V1 use `https://b.ns1p.net/v1/beacon/bulk` 
+* For V2 use `https://b.ns1p.net/v2/beacon/bulk` 
 
-N.B. You can use the protocol buffer objects as a basis for the required
-JSON payload.  You'll need to use helper libraries for your language to
-serialize protocol buffer objects to JSON.  Some information is available on 
-[the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
-page.
+You'll also need an NS1 API key to get started. You can get or create one via
+ NS1's portal here: https://my.nsone.net/#/account/settings.
+
+Here's an example using `curl`:
+
+```bash
+curl -H "X-NSONE-Key: YOUR_API_KEY_HERE" -X POST -d {... JSON body ...}
+```
+
+You can use the protocol buffer objects as a basis for the required JSON payload.
+ The `JSON body` placeholder above is the `Beacons` protocol buffer message
+ serialized to JSON.  You'll need to use helper libraries for your 
+ language to serialize protocol buffer objects to JSON.  Some information is 
+ available on [the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
+ page.
+
+Here's an example JSON message containing 4 payloads:
+
+```json
+{
+  "metrics":  [
+    {
+      "attribution":  {
+        "appid":  "YOUR_APP_ID_HERE",
+        "jobid":  "YOUR_JOB_ID_HERE",
+        "geoAsn":  {
+          "geoCountry":  "US",
+          "geoSubdiv":  "NY",
+          "asn":  2856
+        }
+      },
+      "payloads":  [
+        {
+          "latency":  { "value":  50 }
+        },
+        {
+          "perfScore":  {
+            "value":  55,
+            "meta":  { "ttl":  3200 }
+          }
+        },
+        {
+          "avail":  {
+            "statusCode":  200
+          }
+        },
+        {
+          "availScore":  {
+            "value":  1,
+            "meta":  { "ttl":  7200 }
+          }
+        }
+      ] 
+    }
+  ]
+}
+```
+
+
 
 Building the examples
 ---------------------
