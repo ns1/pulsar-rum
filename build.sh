@@ -46,7 +46,6 @@ function build() {
   echo "Bulk Beacon: Building ${proto_file}"
   mkdir -p "${proto_pkg}"
   protoc --go_out=. --go_opt="${opt_m}" --go-grpc_out=. --go-grpc_opt="${opt_m}" "${proto_file}"
-  # protoc --go-grpc_out=. --go-grpc_opt="${opt_m}" "${proto_file}"
 }
 
 function usage() {
