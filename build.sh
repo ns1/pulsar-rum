@@ -33,13 +33,19 @@ function validate_version() {
 
 function build() {
   v="${1}"
-  proto_file="${PB_DIR}/${v}/bulkbeacon.proto"
-  proto_pkg="${PB_OUT}/${v}"
-  opt_m="M${proto_file}=${PKG_PREFIX}/${PB_OUT}/${v}"
+  if [ "${1}" == "v1" ]
+  then
+    proto_file="${PB_DIR}/bulkbeacon.proto"
+    proto_pkg="${PB_OUT}"
+  else
+    # Versions 2 and up follow this convention.
+    proto_file="${PB_DIR}/${v}/bulkbeacon.proto"
+    proto_pkg="${PB_OUT}/${v}"
+  fi
+  opt_m="M${proto_file}=${proto_pkg}"
   echo "Bulk Beacon: Building ${proto_file}"
   mkdir -p "${proto_pkg}"
-  protoc --go_out=. --go_opt="${opt_m}" --go_opt="module=${PKG_PREFIX}" \
-    --go-grpc_out=. --go-grpc_opt="${opt_m}" --go-grpc_opt="module=${PKG_PREFIX}" "${proto_file}"
+  protoc --go_out=. --go_opt="${opt_m}" --go-grpc_out=. --go-grpc_opt="${opt_m}" "${proto_file}"
 }
 
 function usage() {

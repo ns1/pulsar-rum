@@ -41,5 +41,5 @@ $(V2_GO_FILES): $(PB_DIR)/v2/bulkbeacon.proto
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_BASE_DIR) $(PB_OUT)/v2 $(PB_OUT)/v1
+	rm -rf $(BUILD_BASE_DIR) $(PB_OUT)/v2 $(PB_OUT)/*.pb.go
 
