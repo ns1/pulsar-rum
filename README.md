@@ -68,7 +68,7 @@ You can use the protocol buffer objects as a basis for the required JSON payload
  available on [the protocol buffer docs](https://github.com/protocolbuffers/protobuf/blob/master/docs/third_party.md)
  page.
 
-Here's an example JSON message containing 4 payloads:
+Here's an example JSON message in the V2 format containing 4 payloads:
 
 ```json
 {
