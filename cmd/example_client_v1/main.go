@@ -18,16 +18,14 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"google.golang.org/grpc/credentials"
 	"log"
 	"runtime"
 	"time"
 
 	"github.com/golang/protobuf/jsonpb"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
-
-	"pulsar-rum/pkg/bulkbeacon"
-	pb "pulsar-rum/pkg/bulkbeacon/v1"
+	pb "pulsar-rum/pkg/bulkbeacon"
 )
 
 var (
@@ -77,7 +75,7 @@ func main() {
 	fmt.Printf("Go version: %s\n", runtime.Version())
 
 	// Setup authentication
-	auth := bulkbeacon.NewAuth(authKey)
+	auth := pb.NewAuth(authKey)
 
 	// Set up gRPC connection
 	log.Println("dialing")

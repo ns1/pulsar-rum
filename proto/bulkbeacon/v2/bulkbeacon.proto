@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package bulkbeacon;
+package v2;
 
 ////
 // The network location from which a measurement was taken. Pulsar stores data at Geo+ASN

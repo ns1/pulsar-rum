@@ -22,10 +22,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
+	"pulsar-rum/pkg/bulkbeacon"
 	"runtime"
 	"time"
 
-	"pulsar-rum/pkg/bulkbeacon"
 	pb "pulsar-rum/pkg/bulkbeacon/v2"
 )
 
