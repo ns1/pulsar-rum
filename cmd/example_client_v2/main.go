@@ -26,7 +26,7 @@ import (
 	"runtime"
 	"time"
 
-	pb "pulsar-rum/pkg/bulkbeacon/v2"
+	pb "pulsar-rum/pkg/bulkbeacon/bulkbeacon_v2"
 )
 
 var (
@@ -185,6 +185,6 @@ func main() {
 	if err != nil {
 		log.Printf("Error sending beacons: %v", err)
 	} else {
-		log.Printf("%d datapoints processed (%d failed)", r.Processed, r.Failed)
+		log.Printf("%d datapoints processed (%d payloads failed)", r.Processed, r.Failed)
 	}
 }

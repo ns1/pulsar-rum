@@ -23,7 +23,7 @@ BUILD := ./build.sh
 
 all: bulkbeacon_v1 bulkbeacon_v2
 
-V1_GO_FILES := $(PB_OUT)/v1/bulkbeacon.pb.go $(PB_OUT)/v1/bulkbeacon_grpc.pb.go
+V1_GO_FILES := $(PB_OUT)/bulkbeacon.pb.go $(PB_OUT)/bulkbeacon_grpc.pb.go
 .PHONY: bulkbeacon_v1
 bulkbeacon_v1: $(V1_GO_FILES)
 $(V1_GO_FILES): $(PB_DIR)/v1/bulkbeacon.proto
@@ -31,7 +31,7 @@ $(V1_GO_FILES): $(PB_DIR)/v1/bulkbeacon.proto
 	mkdir -p $(BUILD_BASE_DIR)
 	go build -o $(BUILD_BASE_DIR)/grpc_example_client_v1 cmd/example_client_v1/main.go
 
-V2_GO_FILES := $(PB_OUT)/v2/bulkbeacon.pb.go $(PB_OUT)/v2/bulkbeacon_grpc.pb.go
+V2_GO_FILES := $(PB_OUT)/bulkbeacon_v2/bulkbeacon.pb.go $(PB_OUT)/bulkbeacon_v2/bulkbeacon_grpc.pb.go
 .PHONY: bulkbeacon_v2
 bulkbeacon_v2: $(V2_GO_FILES)
 $(V2_GO_FILES): $(PB_DIR)/v2/bulkbeacon.proto
@@ -41,5 +41,5 @@ $(V2_GO_FILES): $(PB_DIR)/v2/bulkbeacon.proto
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_BASE_DIR) $(PB_OUT)/v2 $(PB_OUT)/*.pb.go
+	rm -rf $(BUILD_BASE_DIR) $(PB_OUT)/bulkbeacon_v2/*.pb.go $(PB_OUT)/*.pb.go
 
