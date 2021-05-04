@@ -35,17 +35,21 @@ function build() {
   v="${1}"
   if [ "${1}" == "v1" ]
   then
-    proto_file="${PB_DIR}/bulkbeacon.proto"
     proto_pkg="${PB_OUT}"
   else
     # Versions 2 and up follow this convention.
-    proto_file="${PB_DIR}/${v}/bulkbeacon.proto"
-    proto_pkg="${PB_OUT}/${v}"
+    proto_pkg="${PB_OUT}/bulkbeacon_${v}"
   fi
+  proto_file="${PB_DIR}/${v}/bulkbeacon.proto"
   opt_m="M${proto_file}=${proto_pkg}"
   echo "Bulk Beacon: Building ${proto_file}"
   mkdir -p "${proto_pkg}"
   protoc --go_out=. --go_opt="${opt_m}" --go-grpc_out=. --go-grpc_opt="${opt_m}" "${proto_file}"
+  # Outdated versions of protoc do not handle the pkg output very well.
+  if [ -f "${PB_DIR}/${v}/bulkbeacon.pb.go" ]
+  then
+    mv "${PB_DIR}/${v}/bulkbeacon.pb.go" "${proto_pkg}/bulkbeacon.pb.go"
+  fi
 }
 
 function usage() {
